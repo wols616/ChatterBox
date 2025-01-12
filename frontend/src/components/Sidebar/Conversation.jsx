@@ -1,9 +1,13 @@
+import { useSocketContext } from "../../context/SocketContext.jsx";
 import useConversation from "../../zustand/useConversation.js";
 
 function Conversation({ conversation, lastIdx }) {
   const { selectedConversation, setSelectedConversation } = useConversation();
 
   const isSelected = selectedConversation?._id === conversation._id; //the '?' is used to don't get an error if a value is null
+  const { onlineUsers } = useSocketContext();
+  const isOnline = onlineUsers.includes(conversation._id);
+
   return (
     <>
       <div
@@ -12,7 +16,7 @@ function Conversation({ conversation, lastIdx }) {
         `}
         onClick={() => setSelectedConversation(conversation)}
       >
-        <div className="avatar online ">
+        <div className={`avatar ${isOnline ? "online" : ""}`}>
           <div className="w-12 rounded-full">
             <img src={conversation.profilePic} alt="user avatar" />
           </div>
