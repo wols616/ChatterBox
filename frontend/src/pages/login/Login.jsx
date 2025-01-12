@@ -1,4 +1,18 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import useLogin from "../../hooks/useLogin";
+
 function Login() {
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+
+  const { login, loading } = useLogin();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await login(userName, password);
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-w-96 mx-auto">
       <div className="h-full w-full bg-white-0 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-0 border border-gray-100 border-opacity-20 p-5">
@@ -6,7 +20,7 @@ function Login() {
           Login
           <span className="text-purple-800"> ChatterBox</span>
         </h1>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div>
             <label className="label p-2">
               <span className="text-base label-text">Username</span>
@@ -15,6 +29,10 @@ function Login() {
               type="text"
               placeholder="Enter username"
               className="w-full input input-bordered h-10 bg-purple-500 bg-opacity-25 border border-white border-opacity-20"
+              value={userName}
+              onChange={(e) => {
+                setUserName(e.target.value);
+              }}
             />
           </div>
           <div>
@@ -25,15 +43,29 @@ function Login() {
               type="password"
               placeholder="Enter Password"
               className="w-full input input-bordered h-10 bg-purple-500 bg-opacity-25 border border-white border-opacity-20"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
             />
           </div>
-          <a className="link link-secondary text-purple-800 hover:text-white transition duration-500 ">
+          <Link
+            to="/signup"
+            className="link link-secondary text-purple-800 hover:text-white transition duration-500 "
+          >
             Don't have an account?
-          </a>
+          </Link>
 
           <div>
-            <button className="btn btn-block btn-sm mt-3 bg-purple-900 hover:bg-gray-300 hover:border-purple-500 hover:text-purple-800 transition duration-500">
-              Login
+            <button
+              className="btn btn-block btn-sm mt-3 bg-purple-900 hover:bg-gray-300 hover:border-purple-500 hover:text-purple-800 transition duration-500"
+              disabled={loading}
+            >
+              {loading ? (
+                <span className="loading loading-spinner"></span>
+              ) : (
+                "Login"
+              )}
             </button>
           </div>
         </form>

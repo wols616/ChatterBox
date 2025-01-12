@@ -31,7 +31,7 @@ export const sendMessage = async (req, res) => {
 
     //SOCKET
 
-    await Promise.all([conversation.save(), newMessage.save()])
+    await Promise.all([conversation.save(), newMessage.save()]);
 
     res.status(201).json({ newMessage });
   } catch (error) {
@@ -41,25 +41,23 @@ export const sendMessage = async (req, res) => {
 };
 
 export const getMessages = async (req, res) => {
-    try {
-        const {id:userToChatId}= req.params
-        const senderId = req.user._id
-        
-        const conversation = await Conversation.findOne({
-            participants: {$all: [senderId, userToChatId]}
-        }).populate("messages") //Get the whole message not just the ID
+  try {
+    const { id: userToChatId } = req.params;
+    const senderId = req.user._id;
 
-        if (!conversation){
-            res.status(200).json([])
-        }
+    const conversation = await Conversation.findOne({
+      participants: { $all: [senderId, userToChatId] },
+    }).populate("messages"); //Get the whole message not just the ID
 
-        const messages = conversation.messages
-
-        res.status(200).json(messages)
-
-
-    } catch (error) {
-        console.log("Error in get messages controller");
-        res.status(500).json({ error: "Internal Server Error" });
+    if (!conversation) {
+      return res.status(200).json([]);
     }
-}
+
+    const messages = conversation.messages;
+
+    return res.status(200).json(messages);
+  } catch (error) {
+    console.log("Error in get messages controller");
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};

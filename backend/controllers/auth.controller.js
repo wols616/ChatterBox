@@ -15,11 +15,15 @@ export const signup = async (req, res) => {
       return res.status(400).json({ error: "Username already exists" });
     }
 
+    if (!password) {
+      return res.status(400).json({ error: "Password is required" });
+    }
+
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const boyProfilePic = `https://avatar.iran.liara.run/public/boy/username=${userName}`;
-    const girlProfilePic = `https://avatar.iran.liara.run/public/girl/username=${userName}`;
+    const boyProfilePic = `https://avatar.iran.liara.run/public/boy/?username=${userName}`;
+    const girlProfilePic = `https://avatar.iran.liara.run/public/girl/?username=${userName}`;
 
     const newUser = new User({
       fullName: fullName,
